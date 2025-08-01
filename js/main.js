@@ -11,7 +11,6 @@ class VideoAdsShowcase {
         this.setupEventListeners();
         this.setupModal();
         this.loadAds();
-        this.setupMobileMenu();
     }
 
     setupEventListeners() {
@@ -146,18 +145,6 @@ class VideoAdsShowcase {
         });
     }
 
-    setupMobileMenu() {
-        const mobileToggle = document.querySelector('.mobile-menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-
-        if (mobileToggle && navMenu) {
-            mobileToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                mobileToggle.classList.toggle('active');
-            });
-        }
-    }
-
     loadAds() {
         this.displayAds('videoAdGrid', adData.videoAds, 'video');
         this.displayAds('ctvAdGrid', adData.ctvAds, 'ctv');
@@ -222,17 +209,14 @@ class VideoAdsShowcase {
     filterAndDisplayAds() {
         let allAds = [
             ...adData.videoAds.map(ad => ({...ad, type: 'video'})),
-            ...adData.ctvAds.map(ad => ({...ad, type: 'ctv'})),
-            ...(adData.interactiveAds || []).map(ad => ({...ad, type: 'interactive'}))
+            ...adData.ctvAds.map(ad => ({...ad, type: 'ctv'}))
         ];
 
         // Apply filters
         if (this.currentFilter !== 'all') {
-            // Check if it's a type filter (video, ctv, interactive) or category filter
-            if (['video', 'ctv', 'interactive'].includes(this.currentFilter)) {
+            if (['video', 'ctv'].includes(this.currentFilter)) {
                 allAds = allAds.filter(ad => ad.type === this.currentFilter);
             } else {
-                // Filter by category (case-insensitive)
                 allAds = allAds.filter(ad => ad.category.toLowerCase() === this.currentFilter.toLowerCase());
             }
         }
@@ -264,7 +248,7 @@ class VideoAdsShowcase {
             
             this.displayFilteredAds('videoAdGrid', videoAds);
             this.displayFilteredAds('ctvAdGrid', ctvAds);
-        } else if (['video', 'ctv', 'interactive'].includes(this.currentFilter)) {
+        } else if (['video', 'ctv'].includes(this.currentFilter)) {
             // Show all in the appropriate grid for type filters
             const targetGrid = this.currentFilter === 'video' ? 'videoAdGrid' : 'ctvAdGrid';
             const otherGrid = this.currentFilter === 'video' ? 'ctvAdGrid' : 'videoAdGrid';
@@ -703,16 +687,4 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize the main application
     new VideoAdsShowcase();
-    
-    // Add scroll effect to header
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('.header');
-        if (window.scrollY > 100) {
-            header.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%)';
-            header.style.backdropFilter = 'blur(10px)';
-        } else {
-            header.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%)';
-            header.style.backdropFilter = 'none';
-        }
-    });
 });
