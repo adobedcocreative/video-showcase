@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video & CTV Ad Showcase</title>
+    <link rel="icon" href="https://wwwimages2.adobe.com/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="https://wwwimages2.adobe.com/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Adobe+Clean:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo Section -->
+                <div class="nav-logo">
+                    <div class="adobe-logo">
+                        <img class="logo-image" src="images/thumbnails/Adobe_Logo.png" alt="Adobe Logo">
+                    </div>
+                    <span class="logo-text">Video & CTV Ad Showcase</span>
+                </div>
+                
+                <!-- Navigation Menu -->
+                <div class="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item dropdown">
+                            <a href="#ctv-ads" class="nav-link dropdown-toggle">CTV Ads <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-menu">
+                                <a href="#carousel" class="dropdown-item">Carousel</a>
+                                <a href="#poll" class="dropdown-item">Poll</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#video-ads" class="nav-link dropdown-toggle">Video Ads <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-menu">
+                                <a href="#entertainment" class="dropdown-item">Entertainment</a>
+                                <a href="#retail" class="dropdown-item">Retail</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+     <!-- Filter and Search Section -->
+    <section class="filters">
+        <div class="container">
+            <div class="filter-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search ads..." id="searchInput">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="video">Video Ads</button>
+                    <button class="filter-btn" data-filter="ctv">CTV Ads</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+     <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="container">
+            <!-- CTV Ads Section -->
+            <section id="ctv-ads" class="ad-section">
+                <h2 class="section-title">Connected TV Advertisements</h2>
+                <div class="ad-grid" id="ctvAdGrid">
+                    <!-- CTV ads will be dynamically loaded here -->
+                </div>
+            </section>
+             <!-- Video Ads Section -->
+            <section id="video-ads" class="ad-section">
+                <h2 class="section-title">Video Advertisements</h2>
+                <div class="ad-grid" id="videoAdGrid">
+                    <!-- Video ads will be dynamically loaded here -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+     <!-- Ad Preview Modal -->
+    <div id="adModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"></h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                 <div class="ad-info">
+                    <div class="ad-details">
+                        <h1>Ad Description</h1>
+                        <p class="ad-description-preview"></p>
+                        <div class="how-it-works-section">
+                            <h2>How It Works</h2>
+                            <p class="ad-how-it-works"></p>
+                        </div>
+                        <div class="ad-specs">
+                            <span class="spec-item"><strong>Format:</strong> <span class="format"></span></span>
+                            <span class="spec-item"><strong>Duration:</strong> <span class="duration"></span></span>
+                        </div>
+                    </div>
+                    <div class="ad-actions">
+                        <button class="btn btn-primary">View Full Screen</button>
+                        <button class="btn btn-secondary">Launch TV screen mockup</button>
+                    </div>
+                </div>
+                <div class="ad-preview-container">
+                    <!-- Ad content will be loaded here -->
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+  
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Adobe Creative Solutions</h3>
+                    <p>Innovative video and CTV advertising solutions powered by Adobe's creative technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#video-ads">Video Ads</a></li>
+                        <li><a href="#ctv-ads">CTV Ads</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Powered by Adobe.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
