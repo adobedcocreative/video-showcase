@@ -65,26 +65,11 @@ const adData = {
             videoSrc: 'videos/Flora_Video.mp4',
             fullscreenVideoSrc: 'videos/Flora_Video.mp4',
             createdDate: '2025-07-31'
-        },
-        // {
-        //     id: 'video-003',
-        //     title: 'Tech Product Launch CTV',
-        //     description: 'Premium Connected TV advertisement showcasing new technology product with 4K video quality.',
-        //     howItWorks: 'Users can interact with the carousel using their remote to explore different destinations.',
-        //     category: 'Technology',
-        //     format: 'CTV Video 4K',
-        //     sizes: ['3840x2160', '1920x1080'],
-        //     duration: '60s',
-        //     thumbnail: 'images/thumbnails/ctv-tech-thumb.jpg',
-        //     videoSrc: 'videos/ctv-tech-preview.mp4',
-        //     htmlPath: 'ads/ctv/tech-launch.html',
-        //     tags: ['ctv', 'technology', '4k', 'product-launch'],
-        //     createdDate: '2025-01-12'
-        // }
+        }
     ]
 };
 
 // Export data for use in main application
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { adData, categories, adFormats, standardSizes };
+    module.exports = { adData };
 }
