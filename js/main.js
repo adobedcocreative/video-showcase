@@ -455,9 +455,8 @@ class VideoAdsShowcase {
         const videoContainer = document.createElement('div');
         videoContainer.style.cssText = `
             position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 80%;
+            width: 100%;
+            height: 100%;
             background-image: url('images/VideoAd_PreviewBg.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -470,11 +469,9 @@ class VideoAdsShowcase {
         // Create video element
         const video = document.createElement('video');
         video.style.cssText = `
-            width: 299px;
-            height: 169px;
-            margin-left: 19px;
-            margin-bottom: 138px;
-            left: 10px;
+            width: 480px;
+            margin-left: 22px;
+            margin-top: 143px;
             object-fit: contain;
         `;
         video.controls = true;
