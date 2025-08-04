@@ -306,7 +306,7 @@ body {
 .section-title {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin: 1rem;
     color: #333;
     text-align: center;
 }
@@ -576,20 +576,20 @@ body {
 
 .ad-specs {
     display: flex;
-    gap: 1.5rem;
-    margin: 2rem 0;
-    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 10px;
 }
 
-.spec-item {
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+.ad-specs .spec-item {
+    background: none;
+    color: #FFF;
+    font-size: 0.9em;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    font-weight: 500;
+    border-radius: 0;
+    display: inline;
 }
 
 .spec-item:hover {
@@ -606,7 +606,7 @@ body {
     margin-top: 2rem;
     display: flex;
     gap: 1rem;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .ad-actions .btn {
