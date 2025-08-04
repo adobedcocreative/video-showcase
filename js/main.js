@@ -178,6 +178,7 @@ class VideoAdsShowcase {
             </div>
             <div class="ad-info">
                 <h3 class="ad-title">${ad.title}</h3>
+                <p class="ad-type">${type === 'video' ? 'Ad Type - Video Ad' : 'Ad Type - CTV Ad'}</p>
                 <p class="ad-description">${ad.description}</p>
                 <div class="ad-meta">
                     <span class="ad-category">${ad.category}</span>
@@ -457,7 +458,7 @@ class VideoAdsShowcase {
             width: 90%;
             max-width: 1200px;
             height: 80%;
-            background-image: url('videos/VideoAd_PreviewBg.png');
+            background-image: url('images/VideoAd_PreviewBg.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -469,13 +470,12 @@ class VideoAdsShowcase {
         // Create video element
         const video = document.createElement('video');
         video.style.cssText = `
-            width: 354px;
+            width: 299px;
             height: 169px;
-            margin-left: 22px;
-            margin-bottom: 134px;
+            margin-left: 19px;
+            margin-bottom: 138px;
             left: 10px;
             object-fit: contain;
-            border-radius: 8px;
         `;
         video.controls = true;
         video.autoplay = true;
@@ -671,10 +671,6 @@ const noResultsCSS = `
 .nav-logo {
     cursor: pointer;
     transition: opacity 0.2s;
-}
-
-.nav-logo:hover {
-    opacity: 0.8;
 }
 `;
 

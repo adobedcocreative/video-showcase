@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Adobe Clean', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'adobe-clean', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #FFF;
     background-color: rgb(248 249 250);
@@ -20,7 +20,7 @@ body {
 
 /* Header Navigation */
 .header {
-    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%);
+    background: #000;
     box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
     position: fixed;
     top: 0;
@@ -58,7 +58,7 @@ body {
 }
 
 .logo-image {
-    width: 45px;
+    width: 36px;
     height: auto;
     margin-right: 10px;
 }
@@ -223,9 +223,9 @@ body {
 /* Filters Section */
 .filters {
     background: white;
-    padding: 2rem 0;
+    padding: 1.3rem 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 5%;
+    margin-top: 4.2%;
 }
 
 .filter-controls {
@@ -296,7 +296,7 @@ body {
 
 /* Main Content */
 .main-content {
-    padding: 2rem 0;
+    padding: 0.5rem 0;
 }
 
 .ad-section {
@@ -304,9 +304,9 @@ body {
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     color: #333;
     text-align: center;
 }
@@ -315,7 +315,6 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
 }
 
 .ad-card {
@@ -375,14 +374,25 @@ body {
 .ad-title {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
     color: #333;
+}
+
+.ad-type {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 3px;
 }
 
 .ad-description {
     color: #333;
     margin-bottom: 1rem;
-    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.5em; /* Adjust based on your line-height */
+    line-height: 1.5em;
 }
 
 .ad-description-preview {
@@ -596,7 +606,7 @@ body {
     margin-top: 2rem;
     display: flex;
     gap: 1rem;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .ad-actions .btn {
@@ -630,6 +640,7 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    flex: 0 0 50%;
 }
 
 .ad-actions .btn-primary:hover {
@@ -902,4 +913,10 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+.search-icon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
 }

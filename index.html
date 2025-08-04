@@ -4,11 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video & CTV Ad Showcase</title>
-    <link rel="icon" href="https://wwwimages2.adobe.com/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="https://wwwimages2.adobe.com/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/adobe_favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/adobe_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Adobe+Clean:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: "adobe-clean";
+            src: url("fonts/adobe-clean-700.woff2") format("woff2"),
+                 url("fonts/adobe-clean-700.woff") format("woff");
+            font-display: auto;
+            font-style: normal;
+            font-weight: 700;
+        }
+    </style>
+
 </head>
 <body>
     <!-- Header Navigation -->
@@ -20,7 +30,7 @@
                     <div class="adobe-logo">
                         <img class="logo-image" src="images/Adobe_Logo.png" alt="Adobe Logo">
                     </div>
-                    <span class="logo-text">Video & CTV Ad Showcase</span>
+                    <span class="logo-text">Video Ad Showcase</span>
                 </div>
                 
                 <!-- Navigation Menu -->
@@ -67,15 +77,15 @@
      <!-- Main Content Area -->
     <main class="main-content">
         <div class="container">
-            <!-- CTV Ads Section -->
+            
+             <h2 class="section-title">Video Advertisements</h2>
+             <!-- CTV Ads Section -->
             <section id="ctv-ads" class="ad-section">
-                <h2 class="section-title">Connected TV Advertisements</h2>
                 <div class="ad-grid" id="ctvAdGrid">
                 </div>
             </section>
              <!-- Video Ads Section -->
             <section id="video-ads" class="ad-section">
-                <h2 class="section-title">Video Advertisements</h2>
                 <div class="ad-grid" id="videoAdGrid">
                 </div>
             </section>
