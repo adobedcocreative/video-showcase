@@ -341,7 +341,16 @@ class VideoAdsShowcase {
         // Show/hide "How It Works" section based on ad type
         if (isCtvAd && ad.howItWorks) {
             howItWorksSection.style.display = 'block';
-            adHowItWorks.textContent = ad.howItWorks;
+            if (Array.isArray(ad.howItWorks)) {
+    const icons = [ '<img class="remote-icon" src="images/remote-arrows.png" alt="Arrows" title="Remote Arrows">',
+        '<img class="remote-icon" src="images/remote-ok-icon.png" alt="OK" title="Remote OK">',
+        '<img class="remote-icon" src="images/remote-back.png" alt="Back" title="Remote Back">']; // Use any icons you like for each step
+    adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map((item, idx) => 
+        `<li> ${item} <span class="remote-icon">${icons[idx % icons.length]}</span></li>`
+    ).join('')}</ul>`;
+} else {
+    adHowItWorks.textContent = ad.howItWorks;
+}
         } else {
             howItWorksSection.style.display = 'none';
         }
@@ -353,7 +362,12 @@ class VideoAdsShowcase {
        if (ad.videoSrc) {
             // Video preview
             modalBody.innerHTML = `
-                <video controls autoplay muted style="max-width: 100%; height: auto;">
+
+                    <div class="ad-actions">
+                        <button class="btn btn-primary">View Full Screen</button>
+                        <button class="btn btn-secondary">Launch TV screen mockup</button>
+                    </div>
+                <video controls autoplay muted style="max-width: 100%; height: 80%;">
                     <source src="${ad.videoSrc}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
