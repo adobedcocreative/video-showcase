@@ -339,21 +339,34 @@ class VideoAdsShowcase {
         const isCtvAd = ad.id.startsWith('ctv-') || adData.ctvAds.some(ctvAd => ctvAd.id === ad.id);
         
         // Show/hide "How It Works" section based on ad type
-        if (isCtvAd && ad.howItWorks) {
-            howItWorksSection.style.display = 'block';
-            if (Array.isArray(ad.howItWorks)) {
-    const icons = [ '<img class="remote-icon" src="images/remote-arrows.png" alt="Arrows" title="Remote Arrows">',
-        '<img class="remote-icon" src="images/remote-ok-icon.png" alt="OK" title="Remote OK">',
-        '<img class="remote-icon" src="images/remote-back.png" alt="Back" title="Remote Back">']; // Use any icons you like for each step
-    adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map((item, idx) => 
-        `<li> ${item} <span class="remote-icon">${icons[idx % icons.length]}</span></li>`
-    ).join('')}</ul>`;
+//         if (isCtvAd && ad.howItWorks) {
+//             howItWorksSection.style.display = 'block';
+//             if (Array.isArray(ad.howItWorks)) {
+//     const icons = [ '<img class="remote-icon" src="images/remote-arrows.png" alt="Arrows" title="Remote Arrows">',
+//         '<img class="remote-icon" src="images/remote-ok-icon.png" alt="OK" title="Remote OK">',
+//         '<img class="remote-icon" src="images/remote-back.png" alt="Back" title="Remote Back">']; // Use any icons you like for each step
+//     adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map((item, idx) => 
+//         `<li> ${item} <span class="remote-icon">${icons[idx % icons.length]}</span></li>`
+//     ).join('')}</ul>`;
+// } else {
+//     adHowItWorks.textContent = ad.howItWorks;
+// }
+//         } else {
+//             howItWorksSection.style.display = 'none';
+//         }
+
+if (isCtvAd && ad.howItWorks) {
+    howItWorksSection.style.display = 'block';
+    if (Array.isArray(ad.howItWorks)) {
+        adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map(item => 
+            `<li>${item}</li>`
+        ).join('')}</ul>`;
+    } else {
+        adHowItWorks.textContent = ad.howItWorks;
+    }
 } else {
-    adHowItWorks.textContent = ad.howItWorks;
+    howItWorksSection.style.display = 'none';
 }
-        } else {
-            howItWorksSection.style.display = 'none';
-        }
         
         formatSpan.textContent = ad.format;
         durationSpan.textContent = ad.duration;
@@ -368,7 +381,7 @@ class VideoAdsShowcase {
                         <button class="btn btn-secondary">Launch TV screen mockup</button>
                     </div>
                 <video controls autoplay muted style="max-width: 100%; height: 80%;">
-                    <source src="${ad.videoSrc}" type="video/mp4">
+                    <source src="${ad.videoSrc}" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
             `;
@@ -435,7 +448,7 @@ class VideoAdsShowcase {
 
     downloadAdAssets(ad) {
         // Get the video URL (prefer fullscreen, fallback to regular)
-        const videoUrl = ad.fullscreenVideoSrc || ad.videoSrc;
+        const videoUrl = ad.videoSrc || ad.fullscreenVideoSrc;
         
         if (!videoUrl) {
             alert('No video available to preview');
@@ -488,7 +501,7 @@ class VideoAdsShowcase {
             margin-top: 143px;
             object-fit: contain;
         `;
-        video.controls = true;
+        video.controls = false;
         video.autoplay = true;
         video.muted = false;
         video.src = videoUrl;
