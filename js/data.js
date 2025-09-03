@@ -76,6 +76,30 @@ const adData = {
             videoSrc: 'videos/Flora_Video.mp4',
             fullscreenVideoSrc: 'videos/Flora_Video.mp4',
             createdDate: '2025-07-31'
+        },
+        {
+            id: 'video-003',
+            title: 'Auto Hub Ad with Dynamic Overlay',
+            description: 'This car advertisement is based on geo-location to deliver a personalized experience. The dynamic overlay adjusts in real-time based on the viewer’s location, showcasing relevant region-specific details. This innovative approach ensures that every potential buyer receives tailored information designed to enhance their shopping journey and drive engagement.',
+            category: 'Geo',
+            format: 'MP4 Video',
+            duration: '06s',
+            thumbnail: 'images/thumbnails/auto.png',
+            videoSrc: 'videos/auto.mp4',
+            fullscreenVideoSrc: 'videos/auto.mp4',
+            createdDate: '2025-09-03'
+        },
+        {
+            id: 'video-004',
+            title: 'Gaming Ad with Countdown',
+            description: 'This gaming ad features a dynamic, geo-specific overlay that highlights exclusive offers on gaming consoles and accessories available near you. The countdown clock creates urgency by showing how much time is left to grab these limited-time deals. Tailored to your location, this ad delivers personalized promotions that level up your gaming experience and help you score the best bargains before time runs out!',
+            category: 'Geo',
+            format: 'MP4 Video',
+            duration: '05s',
+            thumbnail: 'images/thumbnails/countdown.png',
+            videoSrc: 'videos/Countdown.mp4',
+            fullscreenVideoSrc: 'videos/Countdown.mp4',
+            createdDate: '2025-09-03'
         }
     ]
 };
