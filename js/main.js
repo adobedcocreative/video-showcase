@@ -355,7 +355,7 @@ class VideoAdsShowcase {
 //             howItWorksSection.style.display = 'none';
 //         }
 
-if (isCtvAd && ad.howItWorks) {
+if (ad.howItWorks) {
     howItWorksSection.style.display = 'block';
     if (Array.isArray(ad.howItWorks)) {
         adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map(item => 
