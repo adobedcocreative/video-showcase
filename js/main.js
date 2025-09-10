@@ -380,7 +380,7 @@ if (isCtvAd && ad.howItWorks) {
                         <button class="btn btn-primary">View Full Screen</button>
                         <button class="btn btn-secondary">Launch TV screen mockup</button>
                     </div>
-                <video autoplay muted style="max-width: 100%; height: 80%;">
+                <video autoplay style="max-width: 100%; height: 80%;">
                     <source src="${ad.videoSrc}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
