@@ -178,7 +178,7 @@ class VideoAdsShowcase {
             </div>
             <div class="ad-info">
                 <h3 class="ad-title">${ad.title}</h3>
-                <p class="ad-type">${type === 'video' ? 'Ad Type - Video Ad' : 'Ad Type - CTV Ad'}</p>
+                <p class="ad-type">${type === 'video' ? 'Ad Type - VAST Ad' : 'Ad Type - VPAID Ad'}</p>
                 <p class="ad-description">${ad.description}</p>
                 <div class="ad-meta">
                     <span class="ad-category">${ad.category}</span>
