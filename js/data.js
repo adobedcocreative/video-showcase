@@ -55,6 +55,18 @@ const adData = {
     videoAds: [
         {
             id: 'video-001',
+            title: 'Level Up with Adobe Creative Cloud',
+            description: 'This video ad features bold, eye-catching visuals that highlight the 40% discount on Adobe Creative Cloud, using sleek motion graphics and dynamic transitions to capture attention. An interactive QR code is prominently integrated into the video, encouraging viewers to engage directly. The ad delivers a high-energy, visually compelling message that speaks to creators looking to elevate their work.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '05s',
+            thumbnail: 'images/thumbnails/creativity_standout.png',
+            videoSrc: 'videos/300x250_videoAdSample_CreativityStandOut_HD.mp4',
+            fullscreenVideoSrc: 'videos/300x250_videoAdSample_CreativityStandOut_HD.mp4',
+            createdDate: '2025-09-10'
+        },
+        {
+            id: 'video-002',
             title: 'FIFA Video Takeover',
             description: 'This dynamic FIFA ad features a video takeover element that momentarily expands the content, creating a high-impact visual experience. Designed for maximum viewer engagement, the ad combines standard video playback with a seamless transition into a takeover moment, delivering key branding and promotional content in a bold and attention-grabbing format.',
             category: 'Entertainment',
@@ -66,7 +78,7 @@ const adData = {
             createdDate: '2025-07-31'
         },
         {
-            id: 'video-002',
+            id: 'video-003',
             title: 'Flora Video Ad with QR',
             description: 'This Flora Flower Shop ad combines video playback with dynamic UI overlays to deliver an engaging promotional experience. As the video plays, branded elements slide in from the left and bottom of the screen, displaying real-time promotional details such as current discounts and seasonal offers. A QR code is integrated into the overlay, enabling users to scan with their mobile device to access more information or redeem special deals.',
             category: 'Retail',
@@ -78,7 +90,7 @@ const adData = {
             createdDate: '2025-07-31'
         },
         {
-            id: 'video-003',
+            id: 'video-004',
             title: 'Auto Hub Ad with Dynamic Overlay',
             description: 'This car advertisement is based on geo-location to deliver a personalized experience. The dynamic overlay adjusts in real-time based on the viewer’s location, showcasing relevant region-specific details. This innovative approach ensures that every potential buyer receives tailored information designed to enhance their shopping journey and drive engagement.',
             category: 'Geo',
@@ -90,7 +102,7 @@ const adData = {
             createdDate: '2025-09-03'
         },
         {
-            id: 'video-004',
+            id: 'video-005',
             title: 'Gaming Ad with Countdown',
             description: 'This gaming ad features a dynamic, geo-specific overlay that highlights exclusive offers on gaming consoles and accessories available near you. The countdown clock creates urgency by showing how much time is left to grab these limited-time deals. Tailored to your location, this ad delivers personalized promotions that level up your gaming experience and help you score the best bargains before time runs out!',
             category: 'Geo',
