@@ -112,6 +112,18 @@ const adData = {
             videoSrc: 'videos/Countdown.mp4',
             fullscreenVideoSrc: 'videos/Countdown.mp4',
             createdDate: '2025-09-03'
+        },
+        {
+            id: 'video-007',
+            title: 'Adobe Creative Cloud Pro Ad',
+            description: 'This interactive video ad uses eye-catching animations and bold motion graphics to highlight savings of over 40% on Adobe Creative Cloud Pro. An on-screen QR code invites viewers to engage instantly and unlock exclusive offers, making the experience both dynamic and actionable.',
+            category: 'Geo',
+            format: 'MP4 Video',
+            duration: '15s',
+            thumbnail: 'images/thumbnails/creative_cloud.png',
+            videoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
+            fullscreenVideoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
+            createdDate: '2025-09-03'
         }
     ]
 };
