@@ -124,6 +124,66 @@ const adData = {
             videoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
             fullscreenVideoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
             createdDate: '2025-09-03'
+        },
+        {
+            id: 'video-008',
+            title: 'Salt and Vine Restaurant Ad',
+            description: 'This restaurant ad opens with a high-impact background video, enhanced by layered visual overlays and dynamic text callouts. The experience closes with a polished end frame and a clear CTA, designed to drive immediate viewer action.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '15s',
+            thumbnail: 'images/thumbnails/restaurant.png',
+            videoSrc: 'videos/Restaurant_Ad.mp4',
+            fullscreenVideoSrc: 'videos/Restaurant_Ad.mp4',
+            createdDate: '2026-03-12'
+        },
+        {
+            id: 'video-009',
+            title: 'Noverra Business University Ad',
+            description: 'This university ad features a background video enhanced with clean visual overlays and dynamic text callouts, creating a modern, high-engagement experience that clearly communicates key messages.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '10s',
+            thumbnail: 'images/thumbnails/university.png',
+            videoSrc: 'videos/University_Ad.mp4',
+            fullscreenVideoSrc: 'videos/University_Ad.mp4',
+            createdDate: '2026-03-12'
+        },
+        {
+            id: 'video-010',
+            title: 'Tea Store Ad',
+            description: 'This Tea Store ad features a rich background video with layered overlays and smooth animations that keep the message engaging throughout. It closes on a clean end frame with a clear CTA, guiding viewers to take action immediately.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '15s',
+            thumbnail: 'images/thumbnails/teastore.png',
+            videoSrc: 'videos/TeaStore.mp4',
+            fullscreenVideoSrc: 'videos/TeaStore.mp4',
+            createdDate: '2026-03-12'
+        },
+        {
+            id: 'video-010',
+            title: 'The Offroader Automobile Ad',
+            description: 'This off-roader automobile ad combines strong video visuals with dynamic text that highlights key performance and safety features in a clear, engaging flow. It concludes with a bold CTA that encourages viewers to explore.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '15s',
+            thumbnail: 'images/thumbnails/automobile.png',
+            videoSrc: 'videos/Automobile.mp4',
+            fullscreenVideoSrc: 'videos/Automobile.mp4',
+            createdDate: '2026-03-12'
+        },
+        {
+            id: 'video-010',
+            title: 'Fitness Club Ad',
+            description: 'This gym ad blends dynamic overlays with smooth animations and showcases four dynamic gym video moments to keep the storytelling energetic and engaging. It finishes with a strong, polished end frame that reinforces the message and drives action.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '15s',
+            thumbnail: 'images/thumbnails/gym.png',
+            videoSrc: 'videos/Gym.mp4',
+            fullscreenVideoSrc: 'videos/Gym.mp4',
+            createdDate: '2026-03-12'
         }
     ]
 };

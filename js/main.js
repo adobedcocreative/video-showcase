@@ -380,7 +380,7 @@ if (ad.howItWorks) {
                         <button class="btn btn-primary">View Full Screen</button>
                         <button class="btn btn-secondary">Launch TV screen mockup</button>
                     </div>
-                <video autoplay style="max-width: 100%; height: 80%;">
+                <video controls autoplay style="max-width: 100%; height: 80%;">
                     <source src="${ad.videoSrc}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -501,7 +501,7 @@ if (ad.howItWorks) {
             margin-top: 143px;
             object-fit: contain;
         `;
-        video.controls = false;
+        video.controls = true;
         video.autoplay = true;
         video.muted = false;
         video.src = videoUrl;
