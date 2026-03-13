@@ -145,7 +145,7 @@ const adData = {
             format: 'MP4 Video',
             duration: '10s',
             thumbnail: 'images/thumbnails/university.png',
-            videoSrc: 'videos/University_Ad.mp4',
+            videoSrc: 'videos/University_ad.mp4',
             fullscreenVideoSrc: 'videos/University_Ad.mp4',
             createdDate: '2026-03-12'
         },
