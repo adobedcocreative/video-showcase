@@ -380,11 +380,22 @@ if (ad.howItWorks) {
                         <button class="btn btn-primary">View Full Screen</button>
                         <button class="btn btn-secondary">Launch TV screen mockup</button>
                     </div>
-                <video controls autoplay style="max-width: 100%; height: 80%;">
-                    <source src="${ad.videoSrc}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                    <div class="video-with-side-controls">
+                        <video autoplay style="max-width: 100%; height: 90%;">
+                            <source src="${ad.videoSrc}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="side-video-controls">
+                            <button class="side-control-btn play-pause-btn" type="button" aria-label="Pause" title="Pause">⏸</button>
+                            <button class="side-control-btn mute-unmute-btn" type="button" aria-label="Mute" title="Mute">🔊</button>
+                        </div>
+                    </div>
             `;
+
+            const modalVideoContainer = modalBody.querySelector('.video-with-side-controls');
+            if (modalVideoContainer) {
+                this.setupSideVideoControls(modalVideoContainer);
+            }
         } else {
             // Fallback to thumbnail
             modalBody.innerHTML = `<img src="${ad.thumbnail}" alt="${ad.title}" style="max-width: 100%; height: auto;">`;
@@ -416,6 +427,49 @@ if (ad.howItWorks) {
                 this.downloadAdAssets(ad);
             };
         }
+    }
+
+    setupSideVideoControls(videoWrapper) {
+        const video = videoWrapper.querySelector('video');
+        const playPauseBtn = videoWrapper.querySelector('.play-pause-btn');
+        const muteUnmuteBtn = videoWrapper.querySelector('.mute-unmute-btn');
+
+        if (!video || !playPauseBtn || !muteUnmuteBtn) return;
+
+        const updatePlayPauseLabel = () => {
+            const isPaused = video.paused;
+            playPauseBtn.textContent = isPaused ? '▶' : '⏸';
+            playPauseBtn.setAttribute('aria-label', isPaused ? 'Play' : 'Pause');
+            playPauseBtn.title = isPaused ? 'Play' : 'Pause';
+        };
+
+        const updateMuteLabel = () => {
+            const isMuted = video.muted;
+            muteUnmuteBtn.textContent = isMuted ? '🔇' : '🔊';
+            muteUnmuteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
+            muteUnmuteBtn.title = isMuted ? 'Unmute' : 'Mute';
+        };
+
+        playPauseBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+            updatePlayPauseLabel();
+        });
+
+        muteUnmuteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            updateMuteLabel();
+        });
+
+        video.addEventListener('play', updatePlayPauseLabel);
+        video.addEventListener('pause', updatePlayPauseLabel);
+        video.addEventListener('volumechange', updateMuteLabel);
+
+        updatePlayPauseLabel();
+        updateMuteLabel();
     }
 
     closeModal() {
@@ -501,7 +555,7 @@ if (ad.howItWorks) {
             margin-top: 143px;
             object-fit: contain;
         `;
-        video.controls = true;
+        video.controls = false;
         video.autoplay = true;
         video.muted = false;
         video.src = videoUrl;
@@ -695,6 +749,39 @@ const noResultsCSS = `
 .nav-logo {
     cursor: pointer;
     transition: opacity 0.2s;
+}
+
+.video-with-side-controls {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.side-video-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.side-control-btn {
+    border: none;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-control-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
 }
 `;
 
