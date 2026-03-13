@@ -150,13 +150,23 @@ class VideoAdsShowcase {
         this.displayAds('ctvAdGrid', adData.ctvAds, 'ctv');
     }
 
+    sortAdsByLatest(ads) {
+        return [...ads].sort((firstAd, secondAd) => {
+            const firstDate = new Date(firstAd.createdDate || 0).getTime();
+            const secondDate = new Date(secondAd.createdDate || 0).getTime();
+            return secondDate - firstDate;
+        });
+    }
+
     displayAds(containerId, ads, type) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         container.innerHTML = '';
 
-        ads.forEach(ad => {
+        const sortedAds = this.sortAdsByLatest(ads);
+
+        sortedAds.forEach(ad => {
             const adCard = this.createAdCard(ad, type);
             container.appendChild(adCard);
         });
@@ -231,6 +241,8 @@ class VideoAdsShowcase {
                 (ad.tags && ad.tags.some(tag => tag.toLowerCase().includes(this.searchTerm)))
             );
         }
+
+        allAds = this.sortAdsByLatest(allAds);
 
         // Clear existing content and reset section visibility
         const videoGrid = document.getElementById('videoAdGrid');
