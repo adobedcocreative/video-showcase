@@ -424,9 +424,16 @@ if (ad.howItWorks) {
     setupModalActions(ad) {
         const fullScreenBtn = this.modal.querySelector('.btn-primary');
         const downloadBtn = this.modal.querySelector('.btn-secondary');
+        const pauseModalVideos = () => {
+            const modalVideos = this.modal.querySelectorAll('video');
+            modalVideos.forEach(video => {
+                video.pause();
+            });
+        };
 
         if (fullScreenBtn) {
             fullScreenBtn.onclick = () => {
+                pauseModalVideos();
                 if (ad.videoSrc) {
                     window.open(ad.fullscreenVideoSrc, '_blank');
                 }
@@ -435,6 +442,7 @@ if (ad.howItWorks) {
 
         if (downloadBtn) {
             downloadBtn.onclick = () => {
+                pauseModalVideos();
                 // Implement download functionality
                 this.downloadAdAssets(ad);
             };
