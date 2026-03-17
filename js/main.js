@@ -8,9 +8,95 @@ class VideoAdsShowcase {
     }
 
     init() {
+        this.renderFilterButtons();
         this.setupEventListeners();
+        this.setupFilterOverflow();
         this.setupModal();
         this.loadAds();
+    }
+
+    renderFilterButtons() {
+        const filterContainer = document.getElementById('filterButtons');
+        if (!filterContainer || !adData) return;
+
+        const allAds = [...adData.videoAds, ...adData.ctvAds];
+        const uniqueCategories = [...new Set(
+            allAds
+                .map(ad => (ad.category || '').trim())
+                .filter(Boolean)
+        )].sort((firstCategory, secondCategory) => firstCategory.localeCompare(secondCategory));
+
+        const buttons = ['all', ...uniqueCategories];
+
+        filterContainer.innerHTML = `
+            <div class="filter-visible-buttons"></div>
+            <button type="button" class="filter-more-btn" aria-label="More categories" aria-haspopup="true" aria-expanded="false">
+                <span class="ui-icon" aria-hidden="true">|||</span>
+            </button>
+            <div class="filter-overflow-menu" hidden></div>
+        `;
+
+        const visibleButtonsContainer = filterContainer.querySelector('.filter-visible-buttons');
+
+        buttons.forEach((category, index) => {
+            const isAll = category === 'all';
+            const label = isAll ? 'All' : category;
+            const dataFilterValue = isAll ? 'all' : category.toLowerCase();
+            const activeClass = index === 0 ? ' active' : '';
+            const button = document.createElement('button');
+
+            button.className = `filter-btn category-filter-btn${activeClass}`;
+            button.dataset.filter = dataFilterValue;
+            button.textContent = label;
+            visibleButtonsContainer.appendChild(button);
+        });
+
+        this.layoutFilterButtons();
+    }
+
+    setupFilterOverflow() {
+        this.layoutFilterButtons();
+        window.addEventListener('resize', () => {
+            this.layoutFilterButtons();
+        });
+    }
+
+    layoutFilterButtons() {
+        const filterContainer = document.getElementById('filterButtons');
+        if (!filterContainer) return;
+
+        const visibleButtonsContainer = filterContainer.querySelector('.filter-visible-buttons');
+        const overflowMenu = filterContainer.querySelector('.filter-overflow-menu');
+        const moreButton = filterContainer.querySelector('.filter-more-btn');
+
+        if (!visibleButtonsContainer || !overflowMenu || !moreButton) return;
+
+        const allCategoryButtons = [...filterContainer.querySelectorAll('.category-filter-btn')];
+
+        allCategoryButtons.forEach(button => {
+            visibleButtonsContainer.appendChild(button);
+        });
+
+        overflowMenu.classList.remove('open');
+        overflowMenu.hidden = true;
+        moreButton.style.display = 'none';
+        moreButton.setAttribute('aria-expanded', 'false');
+
+        if (visibleButtonsContainer.scrollWidth <= filterContainer.clientWidth) return;
+
+        moreButton.style.display = 'inline-flex';
+
+        const movableButtons = [...visibleButtonsContainer.querySelectorAll('.category-filter-btn')]
+            .filter(button => button.dataset.filter !== 'all');
+
+        while (movableButtons.length && visibleButtonsContainer.scrollWidth + moreButton.offsetWidth > filterContainer.clientWidth) {
+            const buttonToMove = movableButtons.pop();
+            overflowMenu.prepend(buttonToMove);
+        }
+
+        if (!overflowMenu.children.length) {
+            moreButton.style.display = 'none';
+        }
     }
 
     setupEventListeners() {
@@ -23,16 +109,57 @@ class VideoAdsShowcase {
             });
         }
 
-        // Filter buttons
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                filterButtons.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.currentFilter = e.target.dataset.filter;
+        // Filter buttons and overflow menu toggle
+        const filterButtonsContainer = document.getElementById('filterButtons');
+        if (filterButtonsContainer) {
+            filterButtonsContainer.addEventListener('click', (e) => {
+                const moreButton = e.target.closest('.filter-more-btn');
+                const overflowMenu = filterButtonsContainer.querySelector('.filter-overflow-menu');
+
+                if (moreButton && overflowMenu) {
+                    const willOpen = !overflowMenu.classList.contains('open');
+                    overflowMenu.classList.toggle('open', willOpen);
+                    overflowMenu.hidden = !willOpen;
+                    moreButton.setAttribute('aria-expanded', String(willOpen));
+                    return;
+                }
+
+                const clickedFilterButton = e.target.closest('.filter-btn');
+                if (!clickedFilterButton) return;
+
+                filterButtonsContainer.querySelectorAll('.filter-btn').forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                clickedFilterButton.classList.add('active');
+                this.currentFilter = clickedFilterButton.dataset.filter;
                 this.filterAndDisplayAds();
+
+                if (overflowMenu) {
+                    overflowMenu.classList.remove('open');
+                    overflowMenu.hidden = true;
+                }
+
+                const containerMoreButton = filterButtonsContainer.querySelector('.filter-more-btn');
+                if (containerMoreButton) {
+                    containerMoreButton.setAttribute('aria-expanded', 'false');
+                }
             });
-        });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('#filterButtons')) return;
+
+                const overflowMenu = filterButtonsContainer.querySelector('.filter-overflow-menu');
+                const moreButton = filterButtonsContainer.querySelector('.filter-more-btn');
+                if (overflowMenu) {
+                    overflowMenu.classList.remove('open');
+                    overflowMenu.hidden = true;
+                }
+                if (moreButton) {
+                    moreButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
 
         // Hero buttons
         const heroButtons = document.querySelectorAll('.hero-buttons .btn');
@@ -181,10 +308,17 @@ class VideoAdsShowcase {
 
         card.innerHTML = `
             <div class="ad-thumbnail">
-                <img src="${ad.thumbnail}" alt="${ad.title}">
-                <button class="play-button">
-                    <i class="fas fa-play"></i>
-                </button>
+                <video class="ad-thumbnail-video" muted loop playsinline preload="metadata" poster="${ad.thumbnail}">
+                    <source src="${ad.videoSrc}" type="video/mp4">
+                </video>
+                <div class="ad-thumbnail-controls">
+                    <button class="thumbnail-control-btn play-toggle-btn" aria-label="Pause preview">
+                        <span class="ui-icon" aria-hidden="true">⏸</span>
+                    </button>
+                    <button class="thumbnail-control-btn mute-toggle-btn" aria-label="Unmute preview">
+                        <span class="ui-icon" aria-hidden="true">🔇</span>
+                    </button>
+                </div>
             </div>
             <div class="ad-info">
                 <h3 class="ad-title">${ad.title}</h3>
@@ -202,16 +336,54 @@ class VideoAdsShowcase {
             this.openAdModal(ad);
         });
 
-        // Add hover effects for video
-        const video = card.querySelector('video');
-        if (video) {
-            card.addEventListener('mouseenter', () => {
-                video.play();
+        const video = card.querySelector('.ad-thumbnail-video');
+        const playToggleButton = card.querySelector('.play-toggle-btn');
+        const muteToggleButton = card.querySelector('.mute-toggle-btn');
+
+        if (video && playToggleButton && muteToggleButton) {
+            const playIcon = playToggleButton.querySelector('.ui-icon');
+            const muteIcon = muteToggleButton.querySelector('.ui-icon');
+
+            const updateControls = () => {
+                playIcon.textContent = video.paused ? '▶' : '⏸';
+                playToggleButton.setAttribute('aria-label', video.paused ? 'Play preview' : 'Pause preview');
+
+                muteIcon.textContent = video.muted ? '🔇' : '🔊';
+                muteToggleButton.setAttribute('aria-label', video.muted ? 'Unmute preview' : 'Mute preview');
+            };
+
+            playToggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (video.paused) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                }
+                updateControls();
             });
+
+            muteToggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                video.muted = !video.muted;
+                updateControls();
+            });
+
+            card.addEventListener('mouseenter', () => {
+                video.play().catch(() => {});
+            });
+
             card.addEventListener('mouseleave', () => {
                 video.pause();
                 video.currentTime = 0;
             });
+
+            video.addEventListener('play', updateControls);
+            video.addEventListener('pause', updateControls);
+            video.addEventListener('volumechange', updateControls);
+            video.pause();
+            video.defaultMuted = true;
+            video.muted = true;
+            updateControls();
         }
 
         return card;
@@ -288,7 +460,7 @@ class VideoAdsShowcase {
             if (videoSection && videoSection.style.display !== 'none') {
                 videoGrid.innerHTML = `
                     <div class="no-results">
-                        <i class="fas fa-search"></i>
+                        <span class="search-icon no-results-icon" aria-hidden="true"></span>
                         <p>No ads found matching your criteria.</p>
                     </div>
                 `;
@@ -296,7 +468,7 @@ class VideoAdsShowcase {
             } else if (ctvSection) {
                 ctvGrid.innerHTML = `
                     <div class="no-results">
-                        <i class="fas fa-search"></i>
+                        <span class="search-icon no-results-icon" aria-hidden="true"></span>
                         <p>No ads found matching your criteria.</p>
                     </div>
                 `;
@@ -340,32 +512,22 @@ class VideoAdsShowcase {
         const adDescription = this.modal.querySelector('.ad-description-preview');
         const adHowItWorks = this.modal.querySelector('.ad-how-it-works');
         const howItWorksSection = this.modal.querySelector('.how-it-works-section');
+        const adNameHeading = this.modal.querySelector('.ad-name');
         const formatSpan = this.modal.querySelector('.format');
         const durationSpan = this.modal.querySelector('.duration');
+        const categorySpan = this.modal.querySelector('.category');
+        const dimensionsSpan = this.modal.querySelector('.dimensions');
 
         // Update modal content
-        modalTitle.textContent = ad.title;
+        modalTitle.textContent = '';
+        if (adNameHeading) {
+            adNameHeading.textContent = ad.title;
+        }
         adDescription.textContent = ad.description;
         
         // Determine if this is a CTV ad
         const isCtvAd = ad.id.startsWith('ctv-') || adData.ctvAds.some(ctvAd => ctvAd.id === ad.id);
-        
-        // Show/hide "How It Works" section based on ad type
-//         if (isCtvAd && ad.howItWorks) {
-//             howItWorksSection.style.display = 'block';
-//             if (Array.isArray(ad.howItWorks)) {
-//     const icons = [ '<img class="remote-icon" src="images/remote-arrows.png" alt="Arrows" title="Remote Arrows">',
-//         '<img class="remote-icon" src="images/remote-ok-icon.png" alt="OK" title="Remote OK">',
-//         '<img class="remote-icon" src="images/remote-back.png" alt="Back" title="Remote Back">']; // Use any icons you like for each step
-//     adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map((item, idx) => 
-//         `<li> ${item} <span class="remote-icon">${icons[idx % icons.length]}</span></li>`
-//     ).join('')}</ul>`;
-// } else {
-//     adHowItWorks.textContent = ad.howItWorks;
-// }
-//         } else {
-//             howItWorksSection.style.display = 'none';
-//         }
+
 
 if (ad.howItWorks) {
     howItWorksSection.style.display = 'block';
@@ -382,90 +544,134 @@ if (ad.howItWorks) {
         
         formatSpan.textContent = ad.format;
         durationSpan.textContent = ad.duration;
-
+        categorySpan.textContent = ad.category;
+        if (dimensionsSpan) {
+            dimensionsSpan.textContent = 'Loading...';
+        }
         // Load ad preview
        if (ad.videoSrc) {
             // Video preview
             modalBody.innerHTML = `
-
-                    <div class="ad-actions">
-                        <button class="btn btn-primary">View Full Screen</button>
-                        <button class="btn btn-secondary">Launch TV screen mockup</button>
-                    </div>
                     <div class="video-with-side-controls">
-                        <video autoplay style="max-width: 100%; height: 90%;">
+                        <video class="preview-media" autoplay muted playsinline>
                             <source src="${ad.videoSrc}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                         <div class="side-video-controls">
-                            <button class="side-control-btn play-pause-btn" type="button" aria-label="Pause" title="Pause">⏸</button>
-                            <button class="side-control-btn mute-unmute-btn" type="button" aria-label="Mute" title="Mute">🔊</button>
+                            <button class="side-control-btn play-pause-btn" type="button" aria-label="Pause" title="Pause">
+                                <span class="ui-icon" aria-hidden="true">⏸</span>
+                            </button>
+                            <button class="side-control-btn mute-unmute-btn" type="button" aria-label="Mute" title="Mute">
+                                <span class="ui-icon" aria-hidden="true">🔊</span>
+                            </button>
+                            <button class="side-control-btn open-preview-btn" type="button" aria-label="Open preview" title="Open preview">
+                                <span class="open-icon-external" aria-hidden="true">↗</span>
+                            </button>
                         </div>
                     </div>
             `;
 
             const modalVideoContainer = modalBody.querySelector('.video-with-side-controls');
             if (modalVideoContainer) {
-                this.setupSideVideoControls(modalVideoContainer);
+                this.setupSideVideoControls(modalVideoContainer, ad);
+
+                const previewVideo = modalVideoContainer.querySelector('video');
+                if (previewVideo && dimensionsSpan) {
+                    this.updateDimensionsFromMedia(previewVideo, dimensionsSpan);
+                }
             }
         } else {
             // Fallback to thumbnail
-            modalBody.innerHTML = `<img src="${ad.thumbnail}" alt="${ad.title}" style="max-width: 100%; height: auto;">`;
+            modalBody.innerHTML = `<img src="${ad.thumbnail}" alt="${ad.title}" class="preview-media">`;
+
+            if (dimensionsSpan) {
+                const previewImage = modalBody.querySelector('img.preview-media');
+                if (previewImage) {
+                    this.updateDimensionsFromMedia(previewImage, dimensionsSpan);
+                }
+            }
         }
 
         // Show modal
         this.modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
-
-        // Add modal action button events
-        this.setupModalActions(ad);
     }
 
-    setupModalActions(ad) {
-        const fullScreenBtn = this.modal.querySelector('.btn-primary');
-        const downloadBtn = this.modal.querySelector('.btn-secondary');
-        const pauseModalVideos = () => {
-            const modalVideos = this.modal.querySelectorAll('video');
-            modalVideos.forEach(video => {
-                video.pause();
-            });
+    updateDimensionsFromMedia(mediaElement, dimensionsSpan) {
+        if (!mediaElement || !dimensionsSpan) return;
+
+        const setDimensions = () => {
+            const isVideo = mediaElement.tagName.toLowerCase() === 'video';
+            const width = isVideo ? mediaElement.videoWidth : mediaElement.naturalWidth;
+            const height = isVideo ? mediaElement.videoHeight : mediaElement.naturalHeight;
+
+            if (width && height) {
+                dimensionsSpan.textContent = `${width} x ${height} px`;
+            } else {
+                dimensionsSpan.textContent = '-';
+            }
         };
 
-        if (fullScreenBtn) {
-            fullScreenBtn.onclick = () => {
-                pauseModalVideos();
-                if (ad.videoSrc) {
-                    window.open(ad.fullscreenVideoSrc, '_blank');
-                }
-            };
+        const isVideo = mediaElement.tagName.toLowerCase() === 'video';
+        const isReady = isVideo
+            ? mediaElement.readyState >= 1
+            : mediaElement.complete;
+
+        if (isReady) {
+            setDimensions();
+            return;
         }
 
-        if (downloadBtn) {
-            downloadBtn.onclick = () => {
-                pauseModalVideos();
-                // Implement download functionality
-                this.downloadAdAssets(ad);
-            };
-        }
+        const successEvent = isVideo ? 'loadedmetadata' : 'load';
+        mediaElement.addEventListener(successEvent, setDimensions, { once: true });
+        mediaElement.addEventListener('error', () => {
+            dimensionsSpan.textContent = '-';
+        }, { once: true });
     }
 
-    setupSideVideoControls(videoWrapper) {
+    resolvePreviewLink(ad) {
+        const directLink = ad && ad.previewLink ? String(ad.previewLink).trim() : '';
+        if (directLink) return directLink;
+
+        const allAds = [...adData.videoAds, ...adData.ctvAds];
+        const matchedAd = allAds.find((candidate) => {
+            const sameTitle = candidate.title === ad.title;
+            const sameIdAndTitle = candidate.id === ad.id && sameTitle;
+            return sameIdAndTitle || sameTitle;
+        });
+
+        return matchedAd && matchedAd.previewLink
+            ? String(matchedAd.previewLink).trim()
+            : '';
+    }
+
+    setupSideVideoControls(videoWrapper, ad) {
         const video = videoWrapper.querySelector('video');
         const playPauseBtn = videoWrapper.querySelector('.play-pause-btn');
         const muteUnmuteBtn = videoWrapper.querySelector('.mute-unmute-btn');
+        const openPreviewBtn = videoWrapper.querySelector('.open-preview-btn');
 
         if (!video || !playPauseBtn || !muteUnmuteBtn) return;
 
+        video.defaultMuted = true;
+        video.muted = true;
+
         const updatePlayPauseLabel = () => {
             const isPaused = video.paused;
-            playPauseBtn.textContent = isPaused ? '▶' : '⏸';
+            const playPauseIcon = playPauseBtn.querySelector('.ui-icon');
+            if (playPauseIcon) {
+                playPauseIcon.textContent = isPaused ? '▶' : '⏸';
+            }
             playPauseBtn.setAttribute('aria-label', isPaused ? 'Play' : 'Pause');
             playPauseBtn.title = isPaused ? 'Play' : 'Pause';
         };
 
         const updateMuteLabel = () => {
             const isMuted = video.muted;
-            muteUnmuteBtn.textContent = isMuted ? '🔇' : '🔊';
+            const muteIcon = muteUnmuteBtn.querySelector('.ui-icon');
+            if (muteIcon) {
+                muteIcon.textContent = isMuted ? '🔇' : '🔊';
+            }
             muteUnmuteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
             muteUnmuteBtn.title = isMuted ? 'Unmute' : 'Mute';
         };
@@ -483,6 +689,25 @@ if (ad.howItWorks) {
             video.muted = !video.muted;
             updateMuteLabel();
         });
+
+        if (openPreviewBtn) {
+            const previewLink = this.resolvePreviewLink(ad);
+            const hasPreviewLink = previewLink.length > 0;
+
+            openPreviewBtn.disabled = !hasPreviewLink;
+            openPreviewBtn.classList.toggle('is-disabled', !hasPreviewLink);
+            openPreviewBtn.setAttribute('aria-disabled', String(!hasPreviewLink));
+            openPreviewBtn.title = hasPreviewLink ? 'Open preview' : 'Preview link unavailable';
+            openPreviewBtn.setAttribute('aria-label', hasPreviewLink ? 'Open preview' : 'Preview link unavailable');
+
+            openPreviewBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (!hasPreviewLink) return;
+                window.open(previewLink, '_blank', 'noopener,noreferrer');
+            });
+        }
 
         video.addEventListener('play', updatePlayPauseLabel);
         video.addEventListener('pause', updatePlayPauseLabel);
@@ -802,6 +1027,19 @@ const noResultsCSS = `
 
 .side-control-btn:hover {
     background: rgba(0, 0, 0, 0.9);
+}
+
+.open-icon-external {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1;
+    transform: translateX(1px);
+}
+
+.side-control-btn.is-disabled,
+.side-control-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 `;
 

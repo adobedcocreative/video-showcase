@@ -7,7 +7,6 @@
     <link rel="icon" href="images/adobe_favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="images/adobe_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @font-face {
             font-family: "adobe-clean";
@@ -24,7 +23,7 @@
     <!-- Header Navigation -->
     <header class="header">
         <nav class="navbar">
-            <div class="nav-container">
+            <div class="container nav-container">
                 <!-- Logo Section -->
                 <div class="nav-logo">
                     <div class="adobe-logo">
@@ -33,27 +32,19 @@
                     <span class="logo-text">Video Ad Showcase</span>
                 </div>
                 
+                <div class="search-box nav-search-box">
+                    <span class="search-icon" aria-hidden="true"></span>
+                    <input type="text" placeholder="Search ads..." id="searchInput">
+                </div>
+
                 <!-- Navigation Menu -->
                 <div class="nav-menu">
                     <ul class="nav-list">
-                        <li class="nav-item dropdown">
-                            <a href="#ctv-ads" class="nav-link dropdown-toggle">VPAID Ads <i class="fas fa-chevron-down"></i></a>
-                            <div class="dropdown-menu">
-                                <a href="#carousel" class="dropdown-item">Carousel</a>
-                                <a href="#poll" class="dropdown-item">Poll</a>
-                            </div>
+                        <li class="nav-item">
+                            <a href="#ctv-ads" class="nav-link">VPAID Ads</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#video-ads" class="nav-link dropdown-toggle">VAST Ads <i class="fas fa-chevron-down"></i></a>
-                            <div class="dropdown-menu">
-                                <a href="#auto" class="dropdown-item">Auto</a>
-                                <a href="#education" class="dropdown-item">Education</a>
-                                <a href="#entertainment" class="dropdown-item">Entertainment</a>
-                                <a href="#food" class="dropdown-item">Food</a>
-                                <a href="#health & fitness" class="dropdown-item">Health & Fitness</a>
-                                <a href="#retail" class="dropdown-item">Retail</a>
-                                <a href="#geo" class="dropdown-item">Geo</a>
-                            </div>
+                        <li class="nav-item">
+                            <a href="#video-ads" class="nav-link">VAST Ads</a>
                         </li>
                     </ul>
                 </div>
@@ -65,15 +56,7 @@
     <section class="filters">
         <div class="container">
             <div class="filter-controls">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search ads..." id="searchInput">
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="video">VAST Ads</button>
-                    <button class="filter-btn" data-filter="ctv">VPAID Ads</button>
-                </div>
+                <div class="filter-buttons" id="filterButtons"></div>
             </div>
         </div>
     </section>
@@ -109,16 +92,20 @@
             <div class="modal-body">
                  <div class="ad-info">
                     <div class="ad-details">
-                        <h1>Ad Description</h1>
-                        <p class="ad-description-preview"></p>
+                        <h1 class="ad-name"></h1>
                         <div class="how-it-works-section">
                             <h2>How It Works</h2>
                             <p class="ad-how-it-works"></p>
                         </div>
                         <div class="ad-specs">
-                            <span class="spec-item"><strong>Format:</strong> <span class="format"></span></span>
-                             <span class="spec-separator">|</span>
-                            <span class="spec-item"><strong>Duration:</strong> <span class="duration"></span></span>
+                            <span class="spec-item"><span class="spec-label">Format</span><span class="spec-value format"></span></span>
+                             <span class="spec-item"><span class="spec-label">Dimensions</span><span class="spec-value dimensions">-</span></span>
+                            <span class="spec-item"><span class="spec-label">Duration</span><span class="spec-value duration"></span></span>
+                            <span class="spec-item"><span class="spec-label">Category</span><span class="spec-value category"></span></span>
+                        </div>
+                         <div class="description-card">
+                            <h2 class="ad-description-title">Ad Description</h2>
+                            <p class="ad-description-preview"></p>
                         </div>
                     </div>
                     
