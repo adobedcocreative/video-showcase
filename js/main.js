@@ -593,7 +593,7 @@ if (ad.howItWorks) {
         }
 
         // Show modal
-        this.modal.style.display = 'block';
+        this.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
@@ -997,9 +997,19 @@ const noResultsCSS = `
 }
 
 .video-with-side-controls {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
+    height: 100%;
     align-items: flex-start;
+    justify-content: center;
     gap: 12px;
+}
+
+.video-with-side-controls .preview-media {
+    width: min(100%, 1100px);
+    max-height: calc(90vh - 210px);
+    height: auto;
+    object-fit: contain;
 }
 
 .side-video-controls {

@@ -556,6 +556,8 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
+    align-items: center;
+    justify-content: center;
     background-color: rgba(17, 24, 39, 0.55);
     backdrop-filter: blur(5px);
     animation: modalFadeIn 0.3s ease-out;
@@ -574,11 +576,11 @@ body {
 
 .modal-content {
     background: #fff;
-    margin: 2% auto;
+    margin: 0 auto;
     padding: 0;
     border-radius: 16px;
     width: 95%;
-    height: 90vh;
+    height: 78vh;
     max-width: 1600px;
     overflow: hidden;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
@@ -639,7 +641,7 @@ body {
     display: flex;
     align-items: stretch;
     padding: 0;
-    height: calc(90vh - 100px);
+    height: calc(78vh - 100px);
     gap: 0;
 }
 
@@ -784,8 +786,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    justify-content: flex-start;
+    padding: 1.25rem 2rem 1rem;
     background: #f8fafc;
     border-left: 1px solid #e5e7eb;
 }
@@ -971,7 +973,7 @@ body {
     /* Modal responsive styles */
     .modal-content {
         width: 98%;
-        height: 95vh;
+        height: 86vh;
         margin: 1% auto;
         border-radius: 15px;
     }
@@ -992,7 +994,7 @@ body {
 
     .modal-body {
         flex-direction: column;
-        height: calc(95vh - 80px);
+        height: calc(86vh - 80px);
         padding: 0;
     }
 
