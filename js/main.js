@@ -3,6 +3,7 @@ class VideoAdsShowcase {
     constructor() {
         this.currentFilter = 'all';
         this.searchTerm = '';
+        this.searchDebounceTimer = null;
         this.modal = null;
         this.init();
     }
@@ -15,6 +16,54 @@ class VideoAdsShowcase {
         this.loadAds();
     }
 
+    getAdCategories(ad) {
+        const rawCategories = [];
+
+        if (Array.isArray(ad.categories)) {
+            rawCategories.push(...ad.categories);
+        } else if (typeof ad.categories === 'string') {
+            rawCategories.push(...ad.categories.split(','));
+        }
+
+        if (ad.category) {
+            if (typeof ad.category === 'string') {
+                rawCategories.push(...ad.category.split(','));
+            } else {
+                rawCategories.push(ad.category);
+            }
+        }
+
+        const dedupedCategories = [];
+        const seen = new Set();
+
+        rawCategories
+            .flatMap(category => String(category || '').split(','))
+            .map(category => category.trim())
+            .filter(Boolean)
+            .forEach((category) => {
+                const normalizedCategory = category.toLowerCase();
+                if (seen.has(normalizedCategory)) return;
+
+                seen.add(normalizedCategory);
+                dedupedCategories.push(category);
+            });
+
+        return dedupedCategories;
+    }
+
+    getAdCategoryLabel(ad) {
+        const categories = this.getAdCategories(ad);
+        return categories.join(', ');
+    }
+
+    matchesCategoryFilter(ad, filterValue) {
+        const normalizedFilter = String(filterValue || '').trim().toLowerCase();
+        if (!normalizedFilter) return false;
+
+        return this.getAdCategories(ad)
+            .some(category => category.toLowerCase() === normalizedFilter);
+    }
+
     renderFilterButtons() {
         const filterContainer = document.getElementById('filterButtons');
         if (!filterContainer || !adData) return;
@@ -22,7 +71,7 @@ class VideoAdsShowcase {
         const allAds = [...adData.videoAds, ...adData.ctvAds];
         const uniqueCategories = [...new Set(
             allAds
-                .map(ad => (ad.category || '').trim())
+                .flatMap(ad => this.getAdCategories(ad))
                 .filter(Boolean)
         )].sort((firstCategory, secondCategory) => firstCategory.localeCompare(secondCategory));
 
@@ -104,8 +153,23 @@ class VideoAdsShowcase {
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                this.searchTerm = e.target.value.toLowerCase();
-                this.filterAndDisplayAds();
+                const latestValue = e.target.value;
+
+                if (this.searchDebounceTimer) {
+                    clearTimeout(this.searchDebounceTimer);
+                    this.searchDebounceTimer = null;
+                }
+
+                if (latestValue.trim() === '') {
+                    this.searchTerm = '';
+                    this.filterAndDisplayAds();
+                    return;
+                }
+
+                this.searchDebounceTimer = setTimeout(() => {
+                    this.searchTerm = latestValue.toLowerCase();
+                    this.filterAndDisplayAds();
+                }, 800);
             });
         }
 
@@ -161,18 +225,6 @@ class VideoAdsShowcase {
             });
         }
 
-        // Hero buttons
-        const heroButtons = document.querySelectorAll('.hero-buttons .btn');
-        heroButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                if (e.target.textContent.includes('Video')) {
-                    this.scrollToSection('video-ads');
-                } else if (e.target.textContent.includes('CTV')) {
-                    this.scrollToSection('ctv-ads');
-                }
-            });
-        });
-
         // Navigation links
         const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
         navLinks.forEach(link => {
@@ -183,68 +235,6 @@ class VideoAdsShowcase {
             });
         });
 
-        // Dropdown menu items for filtering
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const href = item.getAttribute('href');
-                
-                if (href && href.startsWith('#')) {
-                    // Extract category from href (e.g., "#carousel" -> "carousel")
-                    const category = href.substring(1);
-                    
-                    // Update filter state
-                    this.currentFilter = category;
-                    
-                    // Update active filter button
-                    const filterButtons = document.querySelectorAll('.filter-btn');
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Find and activate the corresponding filter button
-                    const correspondingFilterBtn = document.querySelector(`[data-filter="${category}"]`);
-                    if (correspondingFilterBtn) {
-                        correspondingFilterBtn.classList.add('active');
-                    }
-                    
-                    // Apply the filter
-                    this.filterAndDisplayAds();
-                    
-                    // Scroll to the main content area
-                    this.scrollToSection('ctv-ads');
-                }
-            });
-        });
-
-        // Handle dropdown toggle functionality
-        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-        dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                const dropdown = toggle.closest('.dropdown');
-                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-                
-                // Close other dropdowns
-                document.querySelectorAll('.dropdown').forEach(otherDropdown => {
-                    if (otherDropdown !== dropdown) {
-                        otherDropdown.classList.remove('active');
-                    }
-                });
-                
-                // Toggle current dropdown
-                dropdown.classList.toggle('active');
-            });
-        });
-
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown')) {
-                document.querySelectorAll('.dropdown').forEach(dropdown => {
-                    dropdown.classList.remove('active');
-                });
-            }
-        });
-
         // Logo click to reset filters
         const logoSection = document.querySelector('.nav-logo');
         if (logoSection) {
@@ -252,6 +242,16 @@ class VideoAdsShowcase {
                 this.resetFilters();
             });
         }
+
+        // Pause all videos if user leaves or redirects from the page.
+        const pauseAllVideos = () => {
+            document.querySelectorAll('video').forEach((videoElement) => {
+                videoElement.pause();
+            });
+        };
+
+        window.addEventListener('pagehide', pauseAllVideos);
+        window.addEventListener('beforeunload', pauseAllVideos);
     }
 
     setupModal() {
@@ -299,10 +299,23 @@ class VideoAdsShowcase {
         });
     }
 
+    getVolumeIconMarkup(isMuted = false) {
+        const stateClass = isMuted ? 'is-muted' : 'is-unmuted';
+        return `
+            <svg class="ui-icon volume-svg ${stateClass}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path class="volume-speaker" d="M2 8h3l4-3v14l-4-3H2z"></path>
+                <path class="volume-wave" d="M13 9c1.7 1.2 1.7 4.8 0 6"></path>
+                <path class="volume-wave" d="M16 7c2.8 2.2 2.8 7.8 0 10"></path>
+                <path class="volume-cross volume-cross-a" d="M15 9.5L20 14.5"></path>
+                <path class="volume-cross volume-cross-b" d="M20 9.5L15 14.5"></path>
+            </svg>
+        `;
+    }
+
     createAdCard(ad, type) {
         const card = document.createElement('div');
+        const categoryLabel = this.getAdCategoryLabel(ad);
         card.className = 'ad-card fade-in';
-        card.dataset.category = ad.category.toLowerCase();
         card.dataset.type = type;
         card.dataset.adId = ad.id;
 
@@ -311,21 +324,13 @@ class VideoAdsShowcase {
                 <video class="ad-thumbnail-video" muted loop playsinline preload="metadata" poster="${ad.thumbnail}">
                     <source src="${ad.videoSrc}" type="video/mp4">
                 </video>
-                <div class="ad-thumbnail-controls">
-                    <button class="thumbnail-control-btn play-toggle-btn" aria-label="Pause preview">
-                        <span class="ui-icon" aria-hidden="true">⏸</span>
-                    </button>
-                    <button class="thumbnail-control-btn mute-toggle-btn" aria-label="Unmute preview">
-                        <span class="ui-icon" aria-hidden="true">🔇</span>
-                    </button>
-                </div>
             </div>
             <div class="ad-info">
                 <h3 class="ad-title">${ad.title}</h3>
                 <p class="ad-type">${type === 'video' ? 'Ad Type - VAST Ad' : 'Ad Type - VPAID Ad'}</p>
                 <p class="ad-description">${ad.description}</p>
                 <div class="ad-meta">
-                    <span class="ad-category">${ad.category}</span>
+                    <span class="ad-category">${categoryLabel}</span>
                     <span class="ad-duration">${ad.duration}</span>
                 </div>
             </div>
@@ -337,37 +342,8 @@ class VideoAdsShowcase {
         });
 
         const video = card.querySelector('.ad-thumbnail-video');
-        const playToggleButton = card.querySelector('.play-toggle-btn');
-        const muteToggleButton = card.querySelector('.mute-toggle-btn');
 
-        if (video && playToggleButton && muteToggleButton) {
-            const playIcon = playToggleButton.querySelector('.ui-icon');
-            const muteIcon = muteToggleButton.querySelector('.ui-icon');
-
-            const updateControls = () => {
-                playIcon.textContent = video.paused ? '▶' : '⏸';
-                playToggleButton.setAttribute('aria-label', video.paused ? 'Play preview' : 'Pause preview');
-
-                muteIcon.textContent = video.muted ? '🔇' : '🔊';
-                muteToggleButton.setAttribute('aria-label', video.muted ? 'Unmute preview' : 'Mute preview');
-            };
-
-            playToggleButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (video.paused) {
-                    video.play().catch(() => {});
-                } else {
-                    video.pause();
-                }
-                updateControls();
-            });
-
-            muteToggleButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                video.muted = !video.muted;
-                updateControls();
-            });
-
+        if (video) {
             card.addEventListener('mouseenter', () => {
                 video.play().catch(() => {});
             });
@@ -377,13 +353,9 @@ class VideoAdsShowcase {
                 video.currentTime = 0;
             });
 
-            video.addEventListener('play', updateControls);
-            video.addEventListener('pause', updateControls);
-            video.addEventListener('volumechange', updateControls);
             video.pause();
             video.defaultMuted = true;
             video.muted = true;
-            updateControls();
         }
 
         return card;
@@ -400,7 +372,7 @@ class VideoAdsShowcase {
             if (['video', 'ctv'].includes(this.currentFilter)) {
                 allAds = allAds.filter(ad => ad.type === this.currentFilter);
             } else {
-                allAds = allAds.filter(ad => ad.category.toLowerCase() === this.currentFilter.toLowerCase());
+                allAds = allAds.filter(ad => this.matchesCategoryFilter(ad, this.currentFilter));
             }
         }
 
@@ -409,7 +381,7 @@ class VideoAdsShowcase {
             allAds = allAds.filter(ad => 
                 ad.title.toLowerCase().includes(this.searchTerm) ||
                 ad.description.toLowerCase().includes(this.searchTerm) ||
-                ad.category.toLowerCase().includes(this.searchTerm) ||
+                this.getAdCategories(ad).some(category => category.toLowerCase().includes(this.searchTerm)) ||
                 (ad.tags && ad.tags.some(tag => tag.toLowerCase().includes(this.searchTerm)))
             );
         }
@@ -436,11 +408,10 @@ class VideoAdsShowcase {
         } else if (['video', 'ctv'].includes(this.currentFilter)) {
             // Show all in the appropriate grid for type filters
             const targetGrid = this.currentFilter === 'video' ? 'videoAdGrid' : 'ctvAdGrid';
-            const otherGrid = this.currentFilter === 'video' ? 'ctvAdGrid' : 'videoAdGrid';
             const otherSection = this.currentFilter === 'video' ? ctvSection : videoSection;
-            
+
             this.displayFilteredAds(targetGrid, allAds);
-            
+
             // Hide the other section
             if (otherSection) {
                 otherSection.style.display = 'none';
@@ -507,11 +478,18 @@ class VideoAdsShowcase {
     openAdModal(ad) {
         if (!this.modal) return;
 
+        const modalContentElement = this.modal.querySelector('.modal-content');
+        const modalBodyElement = this.modal.querySelector('.modal-body');
+        if (modalContentElement) {
+            modalContentElement.style.height = 'calc(72vh - 12px)';
+        }
+        if (modalBodyElement) {
+            modalBodyElement.style.height = 'calc(72vh - 92px)';
+        }
+
         const modalTitle = this.modal.querySelector('.modal-title');
         const modalBody = this.modal.querySelector('.ad-preview-container');
         const adDescription = this.modal.querySelector('.ad-description-preview');
-        const adHowItWorks = this.modal.querySelector('.ad-how-it-works');
-        const howItWorksSection = this.modal.querySelector('.how-it-works-section');
         const adNameHeading = this.modal.querySelector('.ad-name');
         const formatSpan = this.modal.querySelector('.format');
         const durationSpan = this.modal.querySelector('.duration');
@@ -524,27 +502,29 @@ class VideoAdsShowcase {
             adNameHeading.textContent = ad.title;
         }
         adDescription.textContent = ad.description;
-        
-        // Determine if this is a CTV ad
-        const isCtvAd = ad.id.startsWith('ctv-') || adData.ctvAds.some(ctvAd => ctvAd.id === ad.id);
 
+        const descriptionCard = this.modal.querySelector('.description-card');
+        let dynamicElementsCard = this.modal.querySelector('.dynamic-elements-card');
+        if (!dynamicElementsCard && descriptionCard) {
+            dynamicElementsCard = document.createElement('div');
+            dynamicElementsCard.className = 'description-card dynamic-elements-card';
+            dynamicElementsCard.innerHTML = `
+                <h2 class="ad-description-title">Dynamic Elements</h2>
+                <p class="ad-description-preview dynamic-fields-note"></p>
+            `;
+            descriptionCard.insertAdjacentElement('afterend', dynamicElementsCard);
+        }
 
-if (ad.howItWorks) {
-    howItWorksSection.style.display = 'block';
-    if (Array.isArray(ad.howItWorks)) {
-        adHowItWorks.innerHTML = `<ul>${ad.howItWorks.map(item => 
-            `<li>${item}</li>`
-        ).join('')}</ul>`;
-    } else {
-        adHowItWorks.textContent = ad.howItWorks;
-    }
-} else {
-    howItWorksSection.style.display = 'none';
-}
-        
+        if (dynamicElementsCard) {
+            const dynamicFieldsNote = dynamicElementsCard.querySelector('.dynamic-fields-note');
+            if (dynamicFieldsNote) {
+                dynamicFieldsNote.textContent = 'The background video, on-screen text, and CTA are dynamically populated to adapt each video creative.';
+            }
+        }
+
         formatSpan.textContent = ad.format;
         durationSpan.textContent = ad.duration;
-        categorySpan.textContent = ad.category;
+        categorySpan.textContent = this.getAdCategoryLabel(ad);
         if (dimensionsSpan) {
             dimensionsSpan.textContent = 'Loading...';
         }
@@ -553,7 +533,7 @@ if (ad.howItWorks) {
             // Video preview
             modalBody.innerHTML = `
                     <div class="video-with-side-controls">
-                        <video class="preview-media" autoplay muted playsinline>
+                        <video class="preview-media" autoplay muted playsinline style="width: 800px; height: 450px;">
                             <source src="${ad.videoSrc}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -562,10 +542,10 @@ if (ad.howItWorks) {
                                 <span class="ui-icon" aria-hidden="true">⏸</span>
                             </button>
                             <button class="side-control-btn mute-unmute-btn" type="button" aria-label="Mute" title="Mute">
-                                <span class="ui-icon" aria-hidden="true">🔊</span>
+                                ${this.getVolumeIconMarkup(true)}
                             </button>
-                            <button class="side-control-btn open-preview-btn" type="button" aria-label="Open preview" title="Open preview">
-                                <span class="open-icon-external" aria-hidden="true">↗</span>
+                            <button class="side-control-btn open-preview-btn" type="button" aria-label="Open preview" title="Open preview" style="padding:1px; overflow:hidden; background: rgb(249 250 252); box-shadow: inset 0 0 0 1px #d1d5db;">
+                                <img class="open-icon-external" src="images/adobe_ad_icon.svg" alt="" aria-hidden="true" style="display:block; width:100%; height:100%; object-fit:contain; transform:none;">
                             </button>
                         </div>
                     </div>
@@ -598,35 +578,9 @@ if (ad.howItWorks) {
     }
 
     updateDimensionsFromMedia(mediaElement, dimensionsSpan) {
-        if (!mediaElement || !dimensionsSpan) return;
+        if (!dimensionsSpan) return;
 
-        const setDimensions = () => {
-            const isVideo = mediaElement.tagName.toLowerCase() === 'video';
-            const width = isVideo ? mediaElement.videoWidth : mediaElement.naturalWidth;
-            const height = isVideo ? mediaElement.videoHeight : mediaElement.naturalHeight;
-
-            if (width && height) {
-                dimensionsSpan.textContent = `${width} x ${height} px`;
-            } else {
-                dimensionsSpan.textContent = '-';
-            }
-        };
-
-        const isVideo = mediaElement.tagName.toLowerCase() === 'video';
-        const isReady = isVideo
-            ? mediaElement.readyState >= 1
-            : mediaElement.complete;
-
-        if (isReady) {
-            setDimensions();
-            return;
-        }
-
-        const successEvent = isVideo ? 'loadedmetadata' : 'load';
-        mediaElement.addEventListener(successEvent, setDimensions, { once: true });
-        mediaElement.addEventListener('error', () => {
-            dimensionsSpan.textContent = '-';
-        }, { once: true });
+        dimensionsSpan.textContent = '1920 x 1080 px';
     }
 
     resolvePreviewLink(ad) {
@@ -670,7 +624,8 @@ if (ad.howItWorks) {
             const isMuted = video.muted;
             const muteIcon = muteUnmuteBtn.querySelector('.ui-icon');
             if (muteIcon) {
-                muteIcon.textContent = isMuted ? '🔇' : '🔊';
+                muteIcon.classList.toggle('is-muted', isMuted);
+                muteIcon.classList.toggle('is-unmuted', !isMuted);
             }
             muteUnmuteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
             muteUnmuteBtn.title = isMuted ? 'Unmute' : 'Mute';
@@ -705,6 +660,7 @@ if (ad.howItWorks) {
                 event.stopPropagation();
 
                 if (!hasPreviewLink) return;
+                video.pause();
                 window.open(previewLink, '_blank', 'noopener,noreferrer');
             });
         }
@@ -745,145 +701,6 @@ if (ad.howItWorks) {
         }
     }
 
-    downloadAdAssets(ad) {
-        // Get the video URL (prefer fullscreen, fallback to regular)
-        const videoUrl = ad.videoSrc || ad.fullscreenVideoSrc;
-        
-        if (!videoUrl) {
-            alert('No video available to preview');
-            return;
-        }
-
-        // Create video overlay with background image
-        this.showVideoOverlay(videoUrl, ad.title);
-    }
-
-    showVideoOverlay(videoUrl, title) {
-        // Create overlay container
-        const overlay = document.createElement('div');
-        overlay.className = 'video-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-
-        // Create video container with background image
-        const videoContainer = document.createElement('div');
-        videoContainer.style.cssText = `
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background-image: url('images/VideoAd_PreviewBg.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
-
-        // Create video element
-        const video = document.createElement('video');
-        video.style.cssText = `
-            width: 480px;
-            margin-left: 22px;
-            margin-top: 143px;
-            object-fit: contain;
-        `;
-        video.controls = false;
-        video.autoplay = true;
-        video.muted = false;
-        video.src = videoUrl;
-
-        // Create close button
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '&times;';
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-            color: #333;
-            font-weight: bold;
-        `;
-
-        // Add hover effect to close button
-        closeBtn.addEventListener('mouseenter', () => {
-            closeBtn.style.background = 'rgba(255, 255, 255, 1)';
-        });
-        closeBtn.addEventListener('mouseleave', () => {
-            closeBtn.style.background = 'rgba(255, 255, 255, 0.9)';
-        });
-
-        // Close overlay function
-        const closeOverlay = () => {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                if (overlay.parentNode) {
-                    document.body.removeChild(overlay);
-                }
-                document.body.style.overflow = 'auto';
-            }, 300);
-        };
-
-        // Add event listeners
-        closeBtn.addEventListener('click', closeOverlay);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                closeOverlay();
-            }
-        });
-
-        // Handle escape key
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                closeOverlay();
-                document.removeEventListener('keydown', handleEscape);
-            }
-        };
-        document.addEventListener('keydown', handleEscape);
-
-        // Assemble the overlay
-        videoContainer.appendChild(video);
-        videoContainer.appendChild(closeBtn);
-        overlay.appendChild(videoContainer);
-        
-        // Add to DOM and show
-        document.body.appendChild(overlay);
-        document.body.style.overflow = 'hidden';
-        
-        // Fade in
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 100);
-
-        // Handle video load error
-        video.addEventListener('error', () => {
-            alert('Error loading video. Please try again.');
-            closeOverlay();
-        });
-    }
-
     resetFilters() {
         // Reset filter state
         this.currentFilter = 'all';
@@ -904,11 +721,6 @@ if (ad.howItWorks) {
             allButton.classList.add('active');
         }
 
-        // Close any open dropdowns
-        document.querySelectorAll('.dropdown').forEach(dropdown => {
-            dropdown.classList.remove('active');
-        });
-
         // Apply the reset filters (show all ads)
         this.filterAndDisplayAds();
 
@@ -919,144 +731,6 @@ if (ad.howItWorks) {
         });
     }
 }
-
-// Add some CSS for no-results display and dropdown functionality
-const noResultsCSS = `
-.no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem 2rem;
-    color: #666;
-}
-
-.no-results i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-}
-
-.no-results p {
-    font-size: 1.2rem;
-}
-
-/* Dropdown styles */
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    min-width: 160px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    border-radius: 4px;
-    z-index: 1000;
-    padding: 8px 0;
-    margin-top: 4px;
-}
-
-.dropdown.active .dropdown-menu {
-    display: block;
-}
-
-.dropdown-item {
-    display: block;
-    padding: 8px 16px;
-    color: #333;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
-
-.dropdown-item:hover {
-    background-color: #f5f5f5;
-    color: #667eea;
-}
-
-.dropdown-toggle {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dropdown-toggle i {
-    transition: transform 0.2s;
-}
-
-.dropdown.active .dropdown-toggle i {
-    transform: rotate(180deg);
-}
-
-/* Logo clickable style */
-.nav-logo {
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.video-with-side-controls {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 12px;
-}
-
-.video-with-side-controls .preview-media {
-    width: min(100%, 1100px);
-    max-height: calc(90vh - 210px);
-    height: auto;
-    object-fit: contain;
-}
-
-.side-video-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.side-control-btn {
-    border: none;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.75);
-    color: #fff;
-    padding: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    width: 40px;
-    height: 40px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.side-control-btn:hover {
-    background: rgba(0, 0, 0, 0.9);
-}
-
-.open-icon-external {
-    display: inline-block;
-    font-size: 16px;
-    line-height: 1;
-    transform: translateX(1px);
-}
-
-.side-control-btn.is-disabled,
-.side-control-btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-`;
-
-// Add CSS to head
-const style = document.createElement('style');
-style.textContent = noResultsCSS;
-document.head.appendChild(style);
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

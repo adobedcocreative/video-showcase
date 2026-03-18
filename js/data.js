@@ -38,7 +38,7 @@ const adData = {
     videoAds: [
         {
             id: 'video-001',
-            title: 'Level Up with Adobe Creative Cloud',
+            title: 'Adobe Creative Cloud',
             description: 'A high-energy Creative Cloud ad highlighting the 40% offer with motion graphics and an interactive QR code.',
             category: 'Retail',
             format: 'MP4 Video',
@@ -91,9 +91,9 @@ const adData = {
         },
         {
             id: 'video-005',
-            title: 'Auto Hub Ad with Dynamic Overlay',
+            title: 'Auto Hub Ad',
             description: 'A geo-targeted auto ad with dynamic overlays that personalize offers by viewer location.',
-            category: 'Auto',
+            category: 'Auto,Geo',
             format: 'MP4 Video',
             duration: '06s',
             thumbnail: 'images/thumbnails/auto.png',
@@ -140,7 +140,7 @@ const adData = {
         },
         {
             id: 'video-009',
-            title: 'Noverra Business University Ad',
+            title: 'Noverra Business University',
             description: 'A university ad with background video, clean overlays, and dynamic text highlights.',
             category: 'Education',
             format: 'MP4 Video',
@@ -165,7 +165,7 @@ const adData = {
             createdDate: '2026-03-12'
         },
         {
-            id: 'video-010',
+            id: 'video-011',
             title: 'The Offroader Automobile Ad',
             description: 'An off-roader ad with bold visuals, dynamic feature text, and a strong CTA.',
             category: 'Auto',
@@ -178,7 +178,7 @@ const adData = {
             createdDate: '2026-03-12'
         },
         {
-            id: 'video-010',
+            id: 'video-012',
             title: 'Fitness Club Ad',
             description: 'A gym ad featuring dynamic overlays, energetic video moments, and a polished end frame.',
             category: 'Health & Fitness',
@@ -191,7 +191,7 @@ const adData = {
             createdDate: '2026-03-12'
         },
         {
-            id: 'video-011',
+            id: 'video-013',
             title: 'Liquefy Ad',
             description: 'A beverage ad with high-impact video and dynamic copy built for strong recall and action.',
             category: 'Food',
