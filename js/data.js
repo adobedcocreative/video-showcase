@@ -33,6 +33,18 @@ const adData = {
             videoSrc: 'videos/travel_carousel_fullscreen.mp4',
             fullscreenVideoSrc: 'videos/travel_carousel_fullscreen.mp4',
             createdDate: '2025-07-31',
+        },
+        {
+            id: 'ctv-003',
+            title: 'Viasat Overlay',
+            description: 'A dynamic ViaSat overlay ad with personalized messaging and a CTA reveal at the end.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '30s',
+            thumbnail: 'images/thumbnails/viasat_overlay.png',
+            videoSrc: 'videos/viasat_overlay.mp4',
+            fullscreenVideoSrc: 'videos/viasat_overlay_fullscreen.mp4',
+            createdDate: '2026-03-23',
         }
     ],
     videoAds: [
