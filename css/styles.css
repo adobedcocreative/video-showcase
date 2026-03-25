@@ -502,6 +502,32 @@ body {
     font-weight: 500;
 }
 
+.ad-category-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ad-internal-use {
+    background: #ffcccc;
+    color: #d32f2f;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.ad-internal-use-badge-modal {
+    background: #ffcccc;
+    color: #d32f2f;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin-left: 12px;
+    display: inline-block;
+}
+
 /* Modal Styles */
 .modal {
     display: none;

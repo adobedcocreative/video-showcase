@@ -315,6 +315,8 @@ class VideoAdsShowcase {
     createAdCard(ad, type) {
         const card = document.createElement('div');
         const categoryLabel = this.getAdCategoryLabel(ad);
+        const internalUseBadge = ad.internalUseOnly ? `<span class="ad-internal-use">Internal Use Only</span>` : '';
+        
         card.className = 'ad-card fade-in';
         card.dataset.type = type;
         card.dataset.adId = ad.id;
@@ -330,7 +332,10 @@ class VideoAdsShowcase {
                 <p class="ad-type">${type === 'video' ? 'Ad Type - VAST Ad' : 'Ad Type - VPAID Ad'}</p>
                 <p class="ad-description">${ad.description}</p>
                 <div class="ad-meta">
-                    <span class="ad-category">${categoryLabel}</span>
+                    <div class="ad-category-wrapper">
+                        <span class="ad-category">${categoryLabel}</span>
+                        ${internalUseBadge}
+                    </div>
                     <span class="ad-duration">${ad.duration}</span>
                 </div>
             </div>
@@ -524,7 +529,11 @@ class VideoAdsShowcase {
 
         formatSpan.textContent = ad.format;
         durationSpan.textContent = ad.duration;
-        categorySpan.textContent = this.getAdCategoryLabel(ad);
+        
+        // Display category
+        const categoryLabel = this.getAdCategoryLabel(ad);
+        categorySpan.textContent = categoryLabel;
+        
         if (dimensionsSpan) {
             dimensionsSpan.textContent = 'Loading...';
         }

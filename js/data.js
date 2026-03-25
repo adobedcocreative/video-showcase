@@ -45,6 +45,7 @@ const adData = {
             videoSrc: 'videos/viasat_overlay.mp4',
             fullscreenVideoSrc: 'videos/viasat_overlay_fullscreen.mp4',
             createdDate: '2026-03-23',
+            internalUseOnly: true
         }
     ],
     videoAds: [
