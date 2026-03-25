@@ -619,6 +619,17 @@ class VideoAdsShowcase {
         video.defaultMuted = true;
         video.muted = true;
 
+        // Disable mute button if video has no audio
+        const hasAudio = ad.hasAudio !== false; // Default to true if not specified
+        muteUnmuteBtn.disabled = !hasAudio;
+        muteUnmuteBtn.classList.toggle('is-disabled', !hasAudio);
+        muteUnmuteBtn.setAttribute('aria-disabled', String(!hasAudio));
+        if (!hasAudio) {
+            muteUnmuteBtn.style.opacity = '0.5';
+            muteUnmuteBtn.style.cursor = 'not-allowed';
+            muteUnmuteBtn.title = 'No audio';
+        }
+
         const updatePlayPauseLabel = () => {
             const isPaused = video.paused;
             const playPauseIcon = playPauseBtn.querySelector('.ui-icon');
@@ -636,8 +647,10 @@ class VideoAdsShowcase {
                 muteIcon.classList.toggle('is-muted', isMuted);
                 muteIcon.classList.toggle('is-unmuted', !isMuted);
             }
-            muteUnmuteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
-            muteUnmuteBtn.title = isMuted ? 'Unmute' : 'Mute';
+            if (hasAudio) {
+                muteUnmuteBtn.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
+                muteUnmuteBtn.title = isMuted ? 'Unmute' : 'Mute';
+            }
         };
 
         playPauseBtn.addEventListener('click', () => {
@@ -650,6 +663,9 @@ class VideoAdsShowcase {
         });
 
         muteUnmuteBtn.addEventListener('click', () => {
+            if (!hasAudio) {
+                return; // Prevent toggle if no audio
+            }
             video.muted = !video.muted;
             updateMuteLabel();
         });

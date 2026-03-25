@@ -15,7 +15,8 @@ const adData = {
             thumbnail: 'images/thumbnails/cereal-ad.png',
             videoSrc: 'videos/cereal-ad-fullscreen.mp4',
             fullscreenVideoSrc: 'videos/cereal-ad-fullscreen.mp4',
-            createdDate: '2025-07-31'
+            createdDate: '2025-07-31',
+            hasAudio: false
         },
         {
             id: 'ctv-002',
@@ -33,6 +34,7 @@ const adData = {
             videoSrc: 'videos/travel_carousel_fullscreen.mp4',
             fullscreenVideoSrc: 'videos/travel_carousel_fullscreen.mp4',
             createdDate: '2025-07-31',
+            hasAudio: false
         },
         {
             id: 'ctv-003',
@@ -45,7 +47,8 @@ const adData = {
             videoSrc: 'videos/viasat_overlay.mp4',
             fullscreenVideoSrc: 'videos/viasat_overlay_fullscreen.mp4',
             createdDate: '2026-03-23',
-            internalUseOnly: true
+            internalUseOnly: true,
+            hasAudio: true
         }
     ],
     videoAds: [
@@ -59,7 +62,8 @@ const adData = {
             thumbnail: 'images/thumbnails/creativity_standout.png',
             videoSrc: 'videos/300x250_videoAdSample_CreativityStandOut_HD.mp4',
             fullscreenVideoSrc: 'videos/300x250_videoAdSample_CreativityStandOut_HD.mp4',
-            createdDate: '2025-09-10'
+            createdDate: '2025-09-10',
+            hasAudio: true
         },
         {
             id: 'video-002',
@@ -71,7 +75,8 @@ const adData = {
             thumbnail: 'images/thumbnails/FC25.png',
             videoSrc: 'videos/fifaVideoTakeOver.mp4',
             fullscreenVideoSrc: 'videos/fifaVideoTakeOver.mp4',
-            createdDate: '2025-07-31'
+            createdDate: '2025-07-31',
+            hasAudio: true
         },
          {
             id: 'video-003',
@@ -88,7 +93,8 @@ const adData = {
             thumbnail: 'images/thumbnails/adobe-carousel.png',
             videoSrc: 'videos/Carousel_NoRemote.mp4',
             fullscreenVideoSrc: 'videos/Carousel_NoRemote.mp4',
-            createdDate: '2025-07-31'
+            createdDate: '2025-07-31',
+            hasAudio: false
         },
         {
             id: 'video-004',
@@ -100,7 +106,8 @@ const adData = {
             thumbnail: 'images/thumbnails/Flora-ad.png',
             videoSrc: 'videos/Flora_Video.mp4',
             fullscreenVideoSrc: 'videos/Flora_Video.mp4',
-            createdDate: '2025-07-31'
+            createdDate: '2025-07-31',
+            hasAudio: false
         },
         {
             id: 'video-005',
@@ -112,7 +119,8 @@ const adData = {
             thumbnail: 'images/thumbnails/auto.png',
             videoSrc: 'videos/auto.mp4',
             fullscreenVideoSrc: 'videos/auto.mp4',
-            createdDate: '2025-09-03'
+            createdDate: '2025-09-03',
+            hasAudio: false
         },
         {
             id: 'video-006',
@@ -124,7 +132,8 @@ const adData = {
             thumbnail: 'images/thumbnails/countdown.png',
             videoSrc: 'videos/Countdown.mp4',
             fullscreenVideoSrc: 'videos/Countdown.mp4',
-            createdDate: '2025-09-03'
+            createdDate: '2025-09-03',
+            hasAudio: false
         },
         {
             id: 'video-007',
@@ -136,7 +145,8 @@ const adData = {
             thumbnail: 'images/thumbnails/creative_cloud.png',
             videoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
             fullscreenVideoSrc: 'videos/640x360_videoAdSample_StandOut_SD.mp4',
-            createdDate: '2025-09-03'
+            createdDate: '2025-09-03',
+            hasAudio: true
         },
         {
             id: 'video-008',
@@ -149,7 +159,8 @@ const adData = {
             thumbnail: 'images/thumbnails/restaurant.png',
             videoSrc: 'videos/Restaurant_Ad.mp4',
             fullscreenVideoSrc: 'videos/Restaurant_Ad.mp4',
-            createdDate: '2026-03-12'
+            createdDate: '2026-03-12',
+            hasAudio: true
         },
         {
             id: 'video-009',
@@ -162,7 +173,8 @@ const adData = {
             thumbnail: 'images/thumbnails/university.png',
             videoSrc: 'videos/University_ad.mp4',
             fullscreenVideoSrc: 'videos/University_Ad.mp4',
-            createdDate: '2026-03-12'
+            createdDate: '2026-03-12',
+            hasAudio: true
         },
         {
             id: 'video-010',
@@ -175,7 +187,8 @@ const adData = {
             thumbnail: 'images/thumbnails/teastore.png',
             videoSrc: 'videos/TeaStore.mp4',
             fullscreenVideoSrc: 'videos/TeaStore.mp4',
-            createdDate: '2026-03-12'
+            createdDate: '2026-03-12',
+            hasAudio: true
         },
         {
             id: 'video-011',
@@ -188,7 +201,8 @@ const adData = {
             thumbnail: 'images/thumbnails/automobile.png',
             videoSrc: 'videos/Automobile.mp4',
             fullscreenVideoSrc: 'videos/Automobile.mp4',
-            createdDate: '2026-03-12'
+            createdDate: '2026-03-12',
+            hasAudio: true
         },
         {
             id: 'video-012',
@@ -201,7 +215,8 @@ const adData = {
             thumbnail: 'images/thumbnails/gym.png',
             videoSrc: 'videos/Gym.mp4',
             fullscreenVideoSrc: 'videos/Gym.mp4',
-            createdDate: '2026-03-12'
+            createdDate: '2026-03-12',
+            hasAudio: false
         },
         {
             id: 'video-013',
@@ -214,7 +229,8 @@ const adData = {
             thumbnail: 'images/thumbnails/liquefy.png',
             videoSrc: 'videos/liquefy.mp4',
             fullscreenVideoSrc: 'videos/liquefy.mp4',
-            createdDate: '2026-03-13'
+            createdDate: '2026-03-13',
+            hasAudio: true
         }
     ]
 };
