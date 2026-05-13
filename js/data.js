@@ -231,6 +231,48 @@ const adData = {
             fullscreenVideoSrc: 'videos/liquefy.mp4',
             createdDate: '2026-03-13',
             hasAudio: true
+        },
+        {
+            id: 'video-014',
+            title: 'CSH-Tombras Ad',
+            description: 'CSH ad with L shaped overlay, an CTA and QR code for quick engagement, and a strong end frame.',
+            category: 'Health & Fitness',
+            format: 'MP4 Video',
+            duration: '30s',
+            previewLink: 'https://advertising.adobe.com/adcloud/public/preview/creative/kPHFWxzkSU%2ByWwxNFo4h6w%3D%3D',
+            thumbnail: 'images/thumbnails/tombras.png',
+            videoSrc: 'videos/CHS-Tombras-30s.mp4',
+            fullscreenVideoSrc: 'videos/CHS-Tombras-30s.mp4',
+            createdDate: '2026-05-13',
+            hasAudio: true
+        },
+        {
+            id: 'video-015',
+            title: 'CSH-Tombras Ad',
+            description: 'CSH ad with L shaped overlay, an CTA and QR code for quick engagement, and a strong end frame.',
+            category: 'Health & Fitness',
+            format: 'MP4 Video',
+            duration: '15s',
+            previewLink: 'https://advertising.adobe.com/adcloud/public/preview/creative/qOPdRueO3BGNxvolrRDDaw%3D%3D',
+            thumbnail: 'images/thumbnails/tombras-15s.png',
+            videoSrc: 'videos/CSH-Tombras-15s.mp4',
+            fullscreenVideoSrc: 'videos/CSH-Tombras-15s.mp4',
+            createdDate: '2026-05-13',
+            hasAudio: true
+        },
+        {
+            id: 'video-016',
+            title: 'MSFT Store Ad',
+            description: 'A retail ad with high-impact video and dynamic copy built for strong recall and action.',
+            category: 'Retail',
+            format: 'MP4 Video',
+            duration: '15s',
+            previewLink: 'https://advertising.adobe.com/adcloud/public/preview/creative/vwUwakdKkGDpthBl6NTonA%3D%3D',
+            thumbnail: 'images/thumbnails/MSFT.png',
+            videoSrc: 'videos/MSFT-Store.mp4',
+            fullscreenVideoSrc: 'videos/MSFT-Store.mp4',
+            createdDate: '2026-05-13',
+            hasAudio: true
         }
     ]
 };
